@@ -1,0 +1,9 @@
+{
+    "event_class_type": ["cycling", "classic", "beatbox"],
+    "event_class_gender": ["male", "female", "mixed"],
+    "event_class_level": ["Beginner", "Advanced", "Intermediate", "All Levels"],
+    "event_class_location": ["West Bay - Gate Mall", "The Pearl Qatar"],
+    "event_class_name": ["Test Class", "FITNESS CHALLENGE"],
+    "event_class_duration": ["0", "5", "10", "15", "20", "25", "30", "35", "40", "45"]
+  }
+  

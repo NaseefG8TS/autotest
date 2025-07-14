@@ -1,0 +1,25 @@
+{
+  "cookies": [
+    {
+      "name": "device_view",
+      "value": "full",
+      "domain": "preprod.g8ts.online",
+      "path": "/",
+      "expires": 1751017171.488794,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "PHPSESSID",
+      "value": "9e871a8bb97ccecffdcb588bc2b3dc1f",
+      "domain": "preprod.g8ts.online",
+      "path": "/",
+      "expires": 1779874808.174736,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    }
+  ],
+  "origins": []
+}

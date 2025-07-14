@@ -1,0 +1,28 @@
+{
+    "success_msg" : "record added",
+    "wait" :1500,
+    "common": {
+        "search_username" : "Nola Yost",
+        "select_username" : "Nola Yost Ashtyn Sawayn II Pin: 255",
+        "pincode" : "112233",
+        "password" : "testing123!"
+    },
+    "transaction": {
+        "list_title": "Admin - Payments",
+        "edit_title": "Admin - Manual Payment",
+        "payment_success": "Payment updated successfully"
+    },
+    "planning": {
+        "new_title": "Admin - Manual Payment",
+        "service_category": "Ox Fitness / Personal Training",
+        "service_list": "Ox Personal Training",
+        "category": "Test Category",
+        "sub_category": "Sub Category"
+    },
+    "app_update_account": {
+        "firstname": "Test",
+        "lastname": "User",
+        "username": "testusername"
+    }
+
+}
