@@ -13,6 +13,7 @@ export function getFormattedDate({ hoursOffset = 0, daysOffset = 0, monthsOffset
   const hours = String(date.getHours()).padStart(2, '0');
   const minutes = String(date.getMinutes()).padStart(2, '0');
   return `${year}-${month}-${day}T${hours}:${minutes}`;
+
 }
 
 export function getFormattedDateWithOffset(offset) {
@@ -54,8 +55,11 @@ export  function getRandomNumber() {
   }
 
   
-export function CustomgetFormattedDate({ hoursOffset = 0, daysOffset = 0, monthsOffset = 0 } = {}) {
+export function CustomgetFormattedDate(end =false,{ hoursOffset = 0, daysOffset = 0, monthsOffset = 0} = {}) {
+
+  console.log(end,'sjsjsjjsjs');
   const date = new Date();
+
 
   date.setHours(date.getHours() + hoursOffset); 
   date.setMonth(date.getMonth() + monthsOffset); 
@@ -63,7 +67,10 @@ export function CustomgetFormattedDate({ hoursOffset = 0, daysOffset = 0, months
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0'); 
   const day = String(date.getDate()).padStart(2, '0');
-  const hours = "00";
-  const minutes = "00";
-  return `${year}-${month}-${day}T${hours}:${minutes}`;
+  const hours =end ? '01' : '00' ;
+  const minutes = end ? '00' : '00' ;
+ 
+
+ return `${year}-${month}-${day}T${hours}:${minutes}`;
+
 }
