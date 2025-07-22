@@ -1,0 +1,20 @@
+{
+  "name": "g8ts-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test:ui": "npx playwright test --ui --open-in-editor=code"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@faker-js/faker": "^9.4.0",
+    "@playwright/test": "^1.52.0",
+    "@types/node": "^22.10.5"
+  },
+  "dependencies": {
+    "playwright": "^1.48.0"
+  }
+}

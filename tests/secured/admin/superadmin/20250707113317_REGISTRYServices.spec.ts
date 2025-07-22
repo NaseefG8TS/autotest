@@ -1,0 +1,61 @@
+import { getFormattedDate,getFormattedDateOnly,CustomgetFormattedDate } from './../../../.././utils.js';
+import { faker } from '@faker-js/faker';
+import { test, expect } from '@playwright/test';
+
+test.use({ storageState: './superadmin-auth.json' });
+
+test('REGISTRY_bot1', async ({ page }) => {
+  await page.goto('https://testing:NoMoreBugPlease01%21@preprod.g8ts.online/admin/');
+  await page.hover('text=REGISTRY');     await page.waitForTimeout(300);     await page.getByRole('link', { name: 'Services' }).click();
+  await page.getByRole('link', { name: 'Add New' }).first().click();
+  await page.getByRole('textbox', { name: 'Name' }).click();
+  await page.getByRole('textbox', { name: 'Name' }).fill('test');
+  await page.getByRole('textbox', { name: 'Price' }).click();
+  await page.getByRole('textbox', { name: 'Price' }).fill('100');
+  await page.locator('#service_duration').selectOption({ index: faker.number.int({ min: 1, max: 10 }) });
+  await page.getByRole('textbox', { name: 'Trainer Terminology' }).click();
+  await page.getByRole('textbox', { name: 'Trainer Terminology' }).fill('Trainerstest');
+  await page.getByRole('textbox', { name: 'Select Studio' }).click();
+  await page.locator('#service_studio').selectOption({ index: faker.number.int({ min: 1, max: 2 }) });
+  await page.getByRole('textbox', { name: 'Select Category' }).click();
+  await page.locator('#service_category_service').selectOption({ index: faker.number.int({ min: 1, max: 2 }) });
+  await page.getByRole('textbox', { name: 'Description' }).click();
+  await page.getByRole('textbox', { name: 'Description' }).fill('test');
+  await page.getByRole('checkbox', { name: 'Enabled' }).check();
+  await page.getByRole('checkbox', { name: 'Visible on the app' }).check();
+  await page.getByRole('checkbox', { name: 'Only for female' }).check();
+  await page.getByRole('button', { name: 'Save' }).click();
+  await page.getByRole('link', { name: 'Back' }).click();
+  await page.locator('.tabulator-cell').first().click();
+  await page.getByRole('textbox', { name: 'Name' }).click();
+  await page.getByRole('textbox', { name: 'Name' }).fill('testtest');
+  await page.getByRole('textbox', { name: 'Price' }).click();
+  await page.getByRole('textbox', { name: 'Price' }).fill('1000');
+  await page.locator('#service_duration').selectOption({ index: faker.number.int({ min: 1, max: 10 }) });
+  await page.getByRole('textbox', { name: 'Trainer Terminology' }).click();
+  await page.getByRole('textbox', { name: 'Trainer Terminology' }).fill('Trainerstesttest');
+  await page.locator('#service_studio').selectOption({ index: faker.number.int({ min: 1, max: 2 }) });
+  await page.getByRole('textbox', { name: 'Select Category' }).click();
+  await page.locator('#service_category_service').selectOption({ index: faker.number.int({ min: 1, max: 2 }) });
+  await page.getByRole('textbox', { name: 'Description' }).click();
+  await page.getByRole('textbox', { name: 'Description' }).fill('testshsh');
+  await page.getByRole('button', { name: 'Save' }).dblclick();
+  await page.getByRole('link', { name: 'Back' }).click();
+  await page.getByRole('link', { name: 'Add New' }).nth(1).click();
+  await page.goto('https://testing:NoMoreBugPlease01%21@preprod.g8ts.online/admin/registry/service-category/form');
+  await page.getByRole('textbox', { name: 'Name' }).click();
+  await page.getByRole('textbox', { name: 'Name' }).fill('testcat');
+  await page.locator('#service_category_studio').selectOption({ index: faker.number.int({ min: 1, max: 2 }) });
+  await page.getByRole('checkbox', { name: 'Enabled' }).check();
+  await page.getByRole('button', { name: 'Save' }).click();
+  await page.getByRole('link', { name: 'Back' }).click();
+  await page.locator('#service-categories-table .tabulator-row').first().locator('.tabulator-cell').first().click();
+  await page.getByRole('textbox', { name: 'Name' }).click();
+  await page.getByRole('textbox', { name: 'Name' }).fill('testcatupd');
+  await page.locator('#service_category_studio').selectOption({ index: faker.number.int({ min: 1, max: 2 }) });
+  await page.getByRole('checkbox', { name: 'Enabled' }).check();
+  await page.getByRole('button', { name: 'Save' }).click();
+  await page.getByRole('link', { name: 'Back' }).click();
+  
+});
+
