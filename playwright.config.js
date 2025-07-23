@@ -32,10 +32,10 @@ module.exports = defineConfig({
         ...devices['Desktop Chrome'],
         headless: false,
         slowMo: 100,
-        launchOptions: {
-          executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe', 
+        // launchOptions: {
+        //   executablePath: 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe', 
     
-        },
+        // },
       },
     },
   ],

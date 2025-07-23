@@ -5,5 +5,5 @@ test.use({
 });
 
 test('test', async ({ page }) => {
-  await page.goto('https://preprod.g8ts.online/login');
+  await page.goto('https://testing:NoMoreBugPlease01!@preprod.g8ts.online/');
 });
