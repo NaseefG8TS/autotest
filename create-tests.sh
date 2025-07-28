@@ -1,4 +1,3 @@
-#!/bin/bash
 
 case "$(uname -s)" in
     Linux*)     OS=Linux;;
@@ -63,7 +62,7 @@ add_menu_hover_interactions() {
 
   perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Export'\'' \}\)\.click\(\);|await page.hover('\''text=REGISTRY'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Export'\'' }).click();|g' "$file"
 
-  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Classes'\'' \}\)\.click\(\);|await page.hover('\''text=PLANNING'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Classes'\'' }).click();|g' "$file"
+  # perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Classes'\'' \}\)\.click\(\);|await page.hover('\''text=PLANNING'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Classes'\'' }).click();|g' "$file"
 
   perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Appointments'\'' \}\)\.click\(\);|await page.hover('\''text=PLANNING'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Appointments'\'' }).click();|g' "$file"
 
@@ -285,6 +284,23 @@ for i in 1 2 3 4; do
 done
 
 
+
+for file in tests/secured/admin/superadmin/*.spec.ts; do
+  if grep -q "getByRole('link', { name: 'Classes' })" "$file"; then
+    if [[ "$file" == *registry* ]]; then
+      echo "Updating $file for REGISTRY"
+      perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Classes'\'' \}\)\.click\(\);|await page.hover('\''text=REGISTRY'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Classes'\'' }).click();|g' "$file"
+
+    elif [[ "$file" == *planning* ]]; then
+      echo "Updating $file for PLANNING"
+      perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Classes'\'' \}\)\.click\(\);|await page.hover('\''text=PLANNING'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Classes'\'' }).click();|g' "$file"
+    fi
+  fi
+done
+
+
+
+
   sed -i '' "s|await page.getByRole('option', { name: 'Credit: .*\. Price' }).click();|await page.getByRole('option', { name: /Credit: .*\\. Price/ }).click();|g" "$FILE"
   sed -i '' -E "s|await page\.getByRole\('row', *\{ *name: *'[^']*' *\}\)\.getByRole\('button'\)\.click\(\);|await page.locator('.table-report tbody tr').first().locator('button').click();|g" "$FILE"
 
@@ -437,12 +453,12 @@ for i in $(seq 0 5 240); do
 done
 
 
-perl -0777 -i -pe "
-s|await page\.getByRole\('link', \{ name: 'REGISTRY' \}\)\.click\(\);\s*await page\.getByRole\('link', \{ name: 'Classes' \}\)\.click\(\);|await page.hover('text=REGISTRY'); await page.waitForTimeout(300); await page.getByRole('link', { name: 'Classes' }).click();|g
-" "$FILE"
-if grep -q "page.getByRole('link', { name: 'PLANNING' }).click()" "$FILE"; then
-    sed -i '' "s|await page.getByRole('link', { name: 'Classes' }).click();|await page.hover('text=PLANNING'); await page.waitForTimeout(300); await page.getByRole('link', { name: 'Classes' }).click();|g" "$FILE"
-fi
+# perl -0777 -i -pe "
+# s|await page\.getByRole\('link', \{ name: 'REGISTRY' \}\)\.click\(\);\s*await page\.getByRole\('link', \{ name: 'Classes' \}\)\.click\(\);|await page.hover('text=REGISTRY'); await page.waitForTimeout(300); await page.getByRole('link', { name: 'Classes' }).click();|g
+# " "$FILE"
+# if grep -q "page.getByRole('link', { name: 'PLANNING' }).click()" "$FILE"; then
+#     sed -i '' "s|await page.getByRole('link', { name: 'Classes' }).click();|await page.hover('text=PLANNING'); await page.waitForTimeout(300); await page.getByRole('link', { name: 'Classes' }).click();|g" "$FILE"
+# fi
 
 sed -i '' -E "s|await page\.getByRole\('row', *\{ *name: *'[^']*' *\}\)\.getByRole\('link'\)\.nth\(4\)\.click\(\);|await page.getByRole('row', { name: '' }).getByRole('link').last().click();|g" "$FILE"
   sed -i '' "s|await page.locator('#classes div').filter({ hasText: .* }).nth(1).click();|await page.waitForTimeout(3150); await page.locator('.toggle_details').first().click();|g" "$FILE"
@@ -450,13 +466,11 @@ sed -i '' -E "s|await page\.getByRole\('row', *\{ *name: *'[^']*' *\}\)\.getByRo
   
   replace_table_selectors "$TARGET_FILE"
 
-  for (( i=1; i<=BOT_COUNT; i++ )); do
     if grep -q "page.getByRole('link', { name: 'Delete' })" "$TARGET_FILE"; then
       sed -i '' -E "s|await page\.getByRole\('link', \{ name: 'Delete' \}\)(\.nth\([0-9]+\))?\.click\(\);|await smartDeleteLast(page);|g" "$TARGET_FILE"
       echo "import { smartDeleteLast } from './../../../../$SCRIPT_DIR/helper.ts';" | cat - "$TARGET_FILE" > temp && mv temp "$TARGET_FILE"
       USE_DELETE_HELPER=true
     fi
-  done
 
 if grep -q "page.goto('https://preprod.g8ts.online/admin/registry/class-pack/form')" "$TARGET_FILE" || 
    grep -q "page.goto('https://testing:NoMoreBugPlease01%21@preprod.g8ts.online/admin/registry/class-pack/form')" "$TARGET_FILE"; then
