@@ -84,7 +84,7 @@ replace_table_selectors() {
   if grep -q "Services" "$file"; then
     table_id="service-categories-table"
   elif grep -q "Packages" "$file"; then
-    table_id="class-pack-table"
+    table_id="membership-pack-table"
   elif grep -q "Studio" "$file"; then
     table_id="studios-table"
   elif grep -q "Trainer Profile" "$file"; then
@@ -298,9 +298,6 @@ for file in tests/secured/admin/superadmin/*.spec.ts; do
   fi
 done
 
-
-
-
   sed -i '' "s|await page.getByRole('option', { name: 'Credit: .*\. Price' }).click();|await page.getByRole('option', { name: /Credit: .*\\. Price/ }).click();|g" "$FILE"
   sed -i '' -E "s|await page\.getByRole\('row', *\{ *name: *'[^']*' *\}\)\.getByRole\('button'\)\.click\(\);|await page.locator('.table-report tbody tr').first().locator('button').click();|g" "$FILE"
 
@@ -467,8 +464,8 @@ sed -i '' -E "s|await page\.getByRole\('row', *\{ *name: *'[^']*' *\}\)\.getByRo
   replace_table_selectors "$TARGET_FILE"
 
     if grep -q "page.getByRole('link', { name: 'Delete' })" "$TARGET_FILE"; then
-      sed -i '' -E "s|await page\.getByRole\('link', \{ name: 'Delete' \}\)(\.nth\([0-9]+\))?\.click\(\);|await smartDeleteLast(page);|g" "$TARGET_FILE"
-      echo "import { smartDeleteLast } from './../../../../$SCRIPT_DIR/helper.ts';" | cat - "$TARGET_FILE" > temp && mv temp "$TARGET_FILE"
+      sed -i '' -E "s|await page\.getByRole\('link', \{ name: 'Delete' \}\)(\.nth\([0-9]+\))?\.click\(\);|await deleteRow(page);|g" "$TARGET_FILE"
+      echo "import { deleteRow } from './../../../../$SCRIPT_DIR/helper.ts';" | cat - "$TARGET_FILE" > temp && mv temp "$TARGET_FILE"
       USE_DELETE_HELPER=true
     fi
 
@@ -479,11 +476,27 @@ if grep -q "page.goto('https://preprod.g8ts.online/admin/registry/class-pack/for
  
 fi
 
-  if grep -qE "await page\.locator\('div:nth-child\([0-9]+\) > div'\)\.first\(\)\.click\(\);" "$TARGET_FILE"; then
-  sed -i '' -i -E "s|await page\.locator\('div:nth-child\([0-9]+\) > div'\)\.first\(\)\.click\(\);|await checkRow(page, 'class-pack-table');|g" "$TARGET_FILE"
-  echo "import { checkRow } from './../../../../$SCRIPT_DIR/helper.ts';" | cat - "$TARGET_FILE" > temp && mv temp "$TARGET_FILE"
-  USE_CLICK_ROW_HELPER=true
+#   if grep -qE "await page\.locator\('div:nth-child\([0-9]+\) > div'\)\.first\(\)\.click\(\);" "$TARGET_FILE"; then
+#   sed -i '' -i -E "s|await page\.locator\('div:nth-child\([0-9]+\) > div'\)\.first\(\)\.click\(\);|await checkRow(page, 'membership-pack-table');|g" "$TARGET_FILE"
+#   echo "import { checkRow } from './../../../../$SCRIPT_DIR/helper.ts';" | cat - "$TARGET_FILE" > temp && mv temp "$TARGET_FILE"
+#   USE_CLICK_ROW_HELPER=true
+# fi
+
+# Match and replace first pattern: div:nth-child(...) > div
+if grep -qE "await page\.locator\('#[^']+ > \.tabulator-tableHolder > \.tabulator-table > div:nth-child\([0-9]+\) > div'\)\.first\(\)\.click\(\);" "$TARGET_FILE"; then
+  sed -i '' -E "s|await page\.locator\('#([-a-zA-Z0-9]+) > \.tabulator-tableHolder > \.tabulator-table > div:nth-child\([0-9]+\) > div'\)\.first\(\)\.click\(\);|await checkRow(page, '\1');|g" "$TARGET_FILE"
 fi
+
+# Match and replace second pattern: .tabulator-row .tabulator-cell
+if grep -qE "await page\.locator\('#[^']+ \.tabulator-row'\)\.first\(\)\.locator\('\.tabulator-cell'\)\.first\(\)\.click\(\);" "$TARGET_FILE"; then
+  sed -i '' -E "s|await page\.locator\('#([-a-zA-Z0-9]+) \.tabulator-row'\)\.first\(\)\.locator\('\.tabulator-cell'\)\.first\(\)\.click\(\);|await checkRow(page, '\1');|g" "$TARGET_FILE"
+fi
+
+# Add import once at the top, if not already present
+# if ! grep -q "checkRow" "$TARGET_FILE"; then
+  
+  { echo "import { checkRow } from './../../../../$SCRIPT_DIR/helper.ts';"; cat "$TARGET_FILE"; } > temp && mv temp "$TARGET_FILE"
+# fi
 
 
   echo "import { faker } from '@faker-js/faker';" | cat - "$TARGET_FILE" > temp && mv temp "$TARGET_FILE"
@@ -495,7 +508,7 @@ fi
   fi
 
   if [ "$USE_DELETE_HELPER" = true ]; then
-    echo "import { smartDeleteLast } from '../helper.ts';"
+    echo "import { deleteRow } from '../helper.ts';"
   fi
    if [ "$USE_CLICK_ROW_HELPER" = true ]; then
     echo "import { checkRow } from '../helper.ts';"
