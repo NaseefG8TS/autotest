@@ -9,7 +9,6 @@ esac
 
 
 if [ "$OS" = "Mac" ]; then
-echo "mac"
     SED="sed -i ''"
     GREP="grep"
     AWK="awk"
@@ -62,7 +61,14 @@ add_menu_hover_interactions() {
 
   perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Export'\'' \}\)\.click\(\);|await page.hover('\''text=REGISTRY'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Export'\'' }).click();|g' "$file"
 
-  # perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Classes'\'' \}\)\.click\(\);|await page.hover('\''text=PLANNING'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Classes'\'' }).click();|g' "$file"
+  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''PLANNING'\'' \}\)\.click\(\);|await page.hover('\''text=PLANNING'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Classes'\'' }).click();|g' "$file"
+
+  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''CRM'\'' \}\)\.click\(\);|await page.hover('\''text=CRM'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Subscriptions'\'' }).click();|g' "$file"
+  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''MARKETING'\'' \}\)\.click\(\);|await page.hover('\''text=MARKETING'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Notifications'\'' }).click();|g' "$file"
+
+  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''POS'\'' \}\)\.click\(\);|await page.hover('\''text=POS'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Point Of Sale'\'' }).click();|g' "$file"
+  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''TRANSACTIONS'\'' \}\)\.click\(\);|await page.hover('\''text=TRANSACTIONS'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Payments'\'' }).click();|g' "$file"
+  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''REGISTRY'\'' \}\)\.click\(\);|await page.hover('\''text=REGISTRY'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Classes'\'' }).click();|g' "$file"
 
   perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Appointments'\'' \}\)\.click\(\);|await page.hover('\''text=PLANNING'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Appointments'\'' }).click();|g' "$file"
 
@@ -188,7 +194,6 @@ fi
 
 sed -i '' 's|https://preprod\.g8ts\.online/|https://testing:NoMoreBugPlease01\!@preprod.g8ts.online/|g' $SCRIPT_DIR/$DESTINATION/$NEW_FILENAME
 sed -i '' "s/test('test',/test('test_$NEW_NAME',/" $SCRIPT_DIR/$DESTINATION/$NEW_FILENAME
-
 
 
   selector_array=(
@@ -458,7 +463,7 @@ done
 # fi
 
 sed -i '' -E "s|await page\.getByRole\('row', *\{ *name: *'[^']*' *\}\)\.getByRole\('link'\)\.nth\(4\)\.click\(\);|await page.getByRole('row', { name: '' }).getByRole('link').last().click();|g" "$FILE"
-  sed -i '' "s|await page.locator('#classes div').filter({ hasText: .* }).nth(1).click();|await page.waitForTimeout(3150); await page.locator('.toggle_details').first().click();|g" "$FILE"
+  sed -i '' "s|await page.locator('#classes div').filter({ hasText: .* }).nth(1).click();|await page.locator('.toggle_details').first().click();|g" "$FILE"
   sed -i '' "s|await page.locator('#select2-event_class_classPacks-result-[^']*').click();|await page.locator('#event_class_classPacks').selectOption({ index: faker.number.int({ min: 1, max: 10 }) });|g" "$FILE"
   
   replace_table_selectors "$TARGET_FILE"
