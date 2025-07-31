@@ -1,43 +1,84 @@
 import { Page, TestInfo } from '@playwright/test';
 
 
-export async function deleteRow(page: Page) {
-  try {
-    
-    
-    await page.waitForLoadState('networkidle');
-    
-   
-    const deleteButtons = page.getByRole('link', { name: 'Delete' });
-    const count = await deleteButtons.count().catch(() => 0);
-    
-    
-    if (count === 0) {
-     
-      await page.screenshot({ path: 'no-delete-buttons.png' });
-      throw new Error('No Delete button found');
-    }
+// export async function deleteRow(page: Page, section_id: boolean) {
+//   try {
 
-    
-    if (count === 1) {
-      await deleteButtons.first().click();
-    } else {
-      await deleteButtons.last().click();
-    }
-    
-    
+//     await page.waitForLoadState('networkidle');
+
+//     const deleteButtons = page.getByRole('link', { name: 'Delete' });
+//     const count = await deleteButtons.count().catch(() => 0);
+
+
+//     if (count === 0) {
+
+//       await page.screenshot({ path: 'no-delete-buttons.png' });
+//       throw new Error('No Delete button found');
+//     }
+//     if (section_id) {
+//       await deleteButtons.first().click();
+
+//     } else {
+//       console.log('outside');
+
+//       if (count === 1) {
+//         await deleteButtons.first().click();
+//       } else {
+//         await deleteButtons.last().click();
+//       }
+//     }
+
+
+
+//   } catch (error) {
+//     await page.screenshot({ path: 'delete-error.png' });
+//     throw error;
+//   }
+
+
+
+
+// }
+
+
+export async function sdeleteRow(page: Page, section_id: boolean) {
+  try {
+
+    await page.waitForLoadState('networkidle');
+
+    const deleteButtons = page.getByRole('link', { name: 'Delete' });
+    // const count = await deleteButtons.count().catch(() => 0);
+
+
+    // if (count === 0) {
+
+    //   await page.screenshot({ path: 'no-delete-buttons.png' });
+    //   throw new Error('No Delete button found');
+    // }
+    // if (section_id) {
+    //   await deleteButtons.first().click();
+
+    // } else {
+
+    //   if (count === 1) {
+        await deleteButtons.first().click();
+      // } else {
+      //   await deleteButtons.last().click();
+      // }
+    // }
+
+
+
   } catch (error) {
     await page.screenshot({ path: 'delete-error.png' });
     throw error;
   }
-
-  
 }
 
 
-  export async function checkRow(page: Page, tableId: string) {
+export async function checkRow(page: Page, tableId: string) {
   try {
-   
+
 
     await page.waitForLoadState('networkidle');
 
@@ -53,8 +94,8 @@ export async function deleteRow(page: Page) {
     }
 
     const targetRow = rowCount > 1 ? rows.last() : rows.first();
-       await targetRow.waitFor({ timeout: 5000 });
-   await targetRow.locator('a.tabulator-action-btn:has(svg.feather-edit)').click();
+    await targetRow.waitFor({ timeout: 5000 });
+    await targetRow.locator('a.tabulator-action-btn:has(svg.feather-edit)').click();
 
   } catch (error) {
     await page.screenshot({ path: 'row-click-error.png' });

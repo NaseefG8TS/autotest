@@ -101,6 +101,7 @@ replace_table_selectors() {
     table_id="layout-table"
   elif grep -q "Appointments" "$file"; then
     table_id="appointments-table"
+    
   fi
 
   if [ -n "$table_id" ]; then
@@ -419,7 +420,7 @@ done
         grep "page.getByRole('textbox', { name: 'Date/Time' }).fill" "$FILE" | \
         sed -n "s/.*fill('\([^']*\)').*/\1/p" | while read -r value; do
           date_filled=$(printf '%s' "$value" | sed -e 's/[\/&|]/\\&/g')
-          sed -i '' "s|page.getByRole('textbox', { name: 'Date/Time' }).fill('$date_filled')|page.getByRole('textbox', { name: 'Date/Time' }).fill(getFormattedDate())|g" "$FILE"
+          sed -i '' "s|page.getByRole('textbox', { name: 'Date/Time' }).fill('$date_filled')|page.getByRole('textbox', { name: 'Date/Time' }).fill(CustomgetFormattedDate())|g" "$FILE"
         done
       elif [[ "$selector" == *"page.getByRole('textbox', { name: 'Event Start' })"* || \
             "$selector" == *"page.getByRole('textbox', { name: 'Event End' })"* || \
@@ -468,11 +469,11 @@ sed -i '' -E "s|await page\.getByRole\('row', *\{ *name: *'[^']*' *\}\)\.getByRo
   
   replace_table_selectors "$TARGET_FILE"
 
-    if grep -q "page.getByRole('link', { name: 'Delete' })" "$TARGET_FILE"; then
-      sed -i '' -E "s|await page\.getByRole\('link', \{ name: 'Delete' \}\)(\.nth\([0-9]+\))?\.click\(\);|await deleteRow(page);|g" "$TARGET_FILE"
-      echo "import { deleteRow } from './../../../../$SCRIPT_DIR/helper.ts';" | cat - "$TARGET_FILE" > temp && mv temp "$TARGET_FILE"
-      USE_DELETE_HELPER=true
-    fi
+    # if grep -q "page.getByRole('link', { name: 'Delete' })" "$TARGET_FILE"; then
+    #   sed -i '' -E "s|await page\.getByRole\('link', \{ name: 'Delete' \}\)(\.nth\([0-9]+\))?\.click\(\);|await deleteRow(page);|g" "$TARGET_FILE"
+    #   echo "import { deleteRow } from './../../../../$SCRIPT_DIR/helper.ts';" | cat - "$TARGET_FILE" > temp && mv temp "$TARGET_FILE"
+    #   USE_DELETE_HELPER=true
+    # fi
 
 if grep -q "page.goto('https://preprod.g8ts.online/admin/registry/class-pack/form')" "$TARGET_FILE" || 
    grep -q "page.goto('https://testing:NoMoreBugPlease01%21@preprod.g8ts.online/admin/registry/class-pack/form')" "$TARGET_FILE"; then
@@ -512,9 +513,9 @@ fi
     echo "const fixtures_data = JSON.parse(JSON.stringify(require('./../../../$SCRIPT_DIR/testing-data.json')));" | cat - "$TARGET_FILE" > temp && mv temp "$TARGET_FILE"
   fi
 
-  if [ "$USE_DELETE_HELPER" = true ]; then
-    echo "import { deleteRow } from '../helper.ts';"
-  fi
+  # if [ "$USE_DELETE_HELPER" = true ]; then
+  #   echo "import { deleteRow } from '../helper.ts';"
+  # fi
    if [ "$USE_CLICK_ROW_HELPER" = true ]; then
     echo "import { checkRow } from '../helper.ts';"
   fi

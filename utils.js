@@ -57,7 +57,6 @@ export  function getRandomNumber() {
   
 export function CustomgetFormattedDate(end =false,{ hoursOffset = 0, daysOffset = 0, monthsOffset = 0} = {}) {
 
-  console.log(end,'sjsjsjjsjs');
   const date = new Date();
 
 
