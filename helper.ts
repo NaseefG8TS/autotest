@@ -1,7 +1,7 @@
 import { Page, TestInfo } from '@playwright/test';
 
 
-export async function smartDeleteLast(page: Page) {
+export async function deleteRow(page: Page) {
   try {
     
     
@@ -38,6 +38,7 @@ export async function smartDeleteLast(page: Page) {
   export async function checkRow(page: Page, tableId: string) {
   try {
    
+
     await page.waitForLoadState('networkidle');
 
     const rows = page.locator(`#${tableId} .tabulator-table .tabulator-row`);
