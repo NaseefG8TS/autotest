@@ -1,4 +1,4 @@
-# 🛠️ Playwright Test Automation Suite
+# 🛠️ Playwright Test Automation
 
 ## 🎯 Key Features
 -  Replace fragile selectors with robust alternatives
@@ -40,6 +40,7 @@ npx playwright --version
 chmod +x create-tests.sh
 
 #run the script 
+
 ./create-tests.sh
 
 # Run all tests
@@ -57,5 +58,14 @@ npx playwright test --slowmo=1000
 
 # HTML report
 npx playwright show-report
+#kill port 
+lsof -i :9323
+kill -9 35732
+
+
+
+
+# first we test registry
+
 
 

@@ -1,37 +1,4 @@
-
-case "$(uname -s)" in
-    Linux*)     OS=Linux;;
-    Darwin*)    OS=Mac;;
-    CYGWIN*)    OS=Windows;;
-    MINGW*)     OS=Windows;;
-    *)          OS="UNKNOWN"
-esac
-
-
-if [ "$OS" = "Mac" ]; then
-    SED="sed -i ''"
-    GREP="grep"
-    AWK="awk"
-elif [ "$OS" = "Linux" ]; then
-echo "linux"
-
-    SED="sed -i"
-    GREP="grep"
-    AWK="awk"
-elif [ "$OS" = "Windows" ]; then
-echo "windows"
-
-    SED="sed -i"
-    GREP="grep"
-    AWK="awk"
-else
-    echo "Unsupported OS detected. Exiting."
-    exit 1
-fi
-
-if [ "$OS" = "Mac" ] && command -v gsed >/dev/null 2>&1; then
-    SED="gsed -i ''"
-fi
+#!/bin/bash
 
 
 detect_duration_dropdown_id() {
@@ -48,71 +15,28 @@ detect_duration_dropdown_id() {
   fi
 }
 
-add_menu_hover_interactions() {
+replace_dynamic_id_locators() {
   local file="$1"
 
-  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Services'\'' \}\)\.click\(\);|await page.hover('\''text=REGISTRY'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Services'\'' }).click();|g' "$file"
+ sed -i '' -E "s|await page\.locator\('\[id=\"[0-9]+\"\] > \.table-report__action > \.flex\.justify-center > \.flex\.items-center\.ml-4'\)\.click\(\);|await page.locator('.table-report__action >> .flex.justify-center >> .flex.items-center.ml-4').last().click();|g" "$file"
 
-  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Packages'\'' \}\)\.click\(\);|await page.hover('\''text=REGISTRY'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Packages'\'' }).click();|g' "$file"
+  sed -i '' -E "s|await page\.locator\('\[id=\"[0-9]+\"\] > \.table-report__action > \.flex\.justify-center > \.flex\.items-center\.text-theme-6'\)\.click\(\);|await page.locator('.table-report__action >> .flex.justify-center >> .flex.items-center.text-theme-6').last().click();|g" "$file"
 
-  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Studio'\'' \}\)\.click\(\);|await page.hover('\''text=REGISTRY'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Studio'\'' }).click();|g' "$file"
-
-  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Trainer Profile'\'' \}\)\.click\(\);|await page.hover('\''text=REGISTRY'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Trainer Profile'\'' }).click();|g' "$file"
-
-  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Export'\'' \}\)\.click\(\);|await page.hover('\''text=REGISTRY'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Export'\'' }).click();|g' "$file"
-
-  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''PLANNING'\'' \}\)\.click\(\);|await page.hover('\''text=PLANNING'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Classes'\'' }).click();|g' "$file"
-
-  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''CRM'\'' \}\)\.click\(\);|await page.hover('\''text=CRM'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Subscriptions'\'' }).click();|g' "$file"
-  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''MARKETING'\'' \}\)\.click\(\);|await page.hover('\''text=MARKETING'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Notifications'\'' }).click();|g' "$file"
-
-  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''POS'\'' \}\)\.click\(\);|await page.hover('\''text=POS'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Point Of Sale'\'' }).click();|g' "$file"
-  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''TRANSACTIONS'\'' \}\)\.click\(\);|await page.hover('\''text=TRANSACTIONS'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Payments'\'' }).click();|g' "$file"
-  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''REGISTRY'\'' \}\)\.click\(\);|await page.hover('\''text=REGISTRY'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Classes'\'' }).click();|g' "$file"
-
-  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Appointments'\'' \}\)\.click\(\);|await page.hover('\''text=PLANNING'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Appointments'\'' }).click();|g' "$file"
-
-  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''No Shows'\'' \}\)\.click\(\);|await page.hover('\''text=PLANNING'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''No Shows'\'' }).click();|g' "$file"
-
-  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Cancellation'\'' \}\)\.click\(\);|await page.hover('\''text=PLANNING'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Cancellation'\'' }).click();|g' "$file"
-
-  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Roles'\'' \}\)\.click\(\);|await page.hover('\''text=CRM'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Roles'\'' }).click();|g' "$file"
-
-  perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Customers'\'' \}\)\.click\(\);|await page.hover('\''text=CRM'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Customers'\'' }).click();|g' "$file"
+echo "llooopps"
 }
 
-replace_table_selectors() {
-  local file="$1"
-  
-  add_menu_hover_interactions "$file"
-  
-  local table_id=""
-  if grep -q "Services" "$file"; then
-    table_id="service-categories-table"
-  elif grep -q "Packages" "$file"; then
-    table_id="membership-pack-table"
-  elif grep -q "Studio" "$file"; then
-    table_id="studios-table"
-  elif grep -q "Trainer Profile" "$file"; then
-    table_id="trainers-table"
-  elif grep -q "Export" "$file"; then
-    table_id="export-table"
-  elif grep -q "Classes" "$file"; then
-    table_id="layout-table"
-  elif grep -q "Appointments" "$file"; then
-    table_id="appointments-table"
-    
-  fi
 
-  if [ -n "$table_id" ]; then
 
-    perl -i -pe "s|await page\.getByRole\('row', \{ name: '[^']*' \}\)\.getByRole\('gridcell'\)\.first\(\)\.click\(\);|await page.locator('#${table_id} .tabulator-row').first().locator('.tabulator-cell').first().click();|g" "$file"
-    
-    perl -i -pe "s|await page\.getByRole\('row', \{ name: '[^']*' \}\)\.getByRole\('button'\)\.click\(\);|await page.locator('#${table_id} .tabulator-row').first().locator('button').click();|g" "$file"
- fi
-}
+MODULES=("REGISTRY" "PLANNING" "CRM" "MARKETING" "POS" "TRANSACTIONS")
+REGISTRY_SUBMODULES=("Classes" "Services" "Packages" "Studio" "Trainer Profile" "Export")
+PLANNING_SUBMODULES=("Classes" "Appointments" "No Shows" "Cancellation")
+CRM_SUBMODULES=("Subscriptions" "Staff" "Roles" "Customers")
+MARKETING_SUBMODULES=("Notifications" "Popin Home" "News")
+POS_SUBMODULES=("Point Of Sale")
+TRANSACTIONS_SUBMODULES=("Payments")
 
 while true; do
+
   read -p "Select type of test (admin | app): " TEST_TYPE
   if [[ "$TEST_TYPE" != "admin" && "$TEST_TYPE" != "app" ]]; then
     echo "Error: Invalid test type. Choose 'admin' or 'app'."
@@ -133,71 +57,187 @@ while true; do
     fi
   fi
 
+  echo "Available modules:"
+  for i in "${!MODULES[@]}"; do
+    echo "$((i+1)). ${MODULES[$i]}"
+  done
+  
+  read -p "Select module number: " MODULE_NUM
+  if [[ ! "$MODULE_NUM" =~ ^[0-9]+$ ]] || [[ "$MODULE_NUM" -lt 1 ]] || [[ "$MODULE_NUM" -gt "${#MODULES[@]}" ]]; then
+    echo "Error: Invalid module selection"
+    exit 1
+  fi
+  
+  SELECTED_MODULE="${MODULES[$((MODULE_NUM-1))]}"
+  
+  case "$SELECTED_MODULE" in
+    "REGISTRY")
+      SUBMODULES=("${REGISTRY_SUBMODULES[@]}")
+      ;;
+    "PLANNING")
+      SUBMODULES=("${PLANNING_SUBMODULES[@]}")
+      ;;
+    "CRM")
+      SUBMODULES=("${CRM_SUBMODULES[@]}")
+      ;;
+    "MARKETING")
+      SUBMODULES=("${MARKETING_SUBMODULES[@]}")
+      ;;
+    "POS")
+      SUBMODULES=("${POS_SUBMODULES[@]}")
+      ;;
+    "TRANSACTIONS")
+      SUBMODULES=("${TRANSACTIONS_SUBMODULES[@]}")
+      ;;
+    *)
+      SUBMODULES=()
+      ;;
+  esac
 
- AUTH_FILE=""
-if [[ "$AUTH_REQUIRED" == "yes" && "$ROLE" == "superadmin" ]]; then
-  AUTH_FILE="superadmin-auth.json"
-elif [[ "$AUTH_REQUIRED" == "yes" && "$ROLE" == "user" ]]; then
-  AUTH_FILE="user-auth.json"
-else
+  
+  if [ ${#SUBMODULES[@]} -gt 0 ]; then
+    echo "Available submodules for $SELECTED_MODULE:"
+    for i in "${!SUBMODULES[@]}"; do
+      echo "$((i+1)). ${SUBMODULES[$i]}"
+    done
+    
+    read -p "Select submodule number: " SUBMODULE_NUM
+    if [[ ! "$SUBMODULE_NUM" =~ ^[0-9]+$ ]] || [[ "$SUBMODULE_NUM" -lt 1 ]] || [[ "$SUBMODULE_NUM" -gt "${#SUBMODULES[@]}" ]]; then
+      echo "Error: Invalid submodule selection."
+      exit 1
+    fi
+    
+    SELECTED_SUBMODULE="${SUBMODULES[$((SUBMODULE_NUM-1))]}"
+  else
+    SELECTED_SUBMODULE=""
+  fi
+
   AUTH_FILE=""
-fi
+  if [[ "$AUTH_REQUIRED" == "yes" && "$ROLE" == "superadmin" ]]; then
+    AUTH_FILE="superadmin-auth.json"
+  elif [[ "$AUTH_REQUIRED" == "yes" && "$ROLE" == "user" ]]; then
+    AUTH_FILE="user-auth.json"
+  else
+    AUTH_FILE=""
+  fi
 
+  SCRIPT_DIR=$(dirname "$0")
 
-SCRIPT_DIR=$(dirname "$0")
+  ROUTE_PATH="/"
+  [[ "$TEST_TYPE" == "admin" ]] && ROUTE_PATH="/admin"
 
+  if [[ "$AUTH_REQUIRED" == "yes" ]]; then
+    BASE_DESTINATION="/tests/secured/$TEST_TYPE/$ROLE"
+  else
+    BASE_DESTINATION="/tests/unsecured/$TEST_TYPE"
+  fi
 
-ROUTE_PATH="/"
-[[ "$TEST_TYPE" == "admin" ]] && ROUTE_PATH="/admin"
-
-AUTH_FILE=""
-[[ "$AUTH_REQUIRED" == "yes" && "$ROLE" == "superadmin" ]] && AUTH_FILE="superadmin-auth.json"
-[[ "$AUTH_REQUIRED" == "yes" && "$ROLE" == "user" ]] && AUTH_FILE="user-auth.json"
-
-
-if [[ "$AUTH_REQUIRED" == "yes" ]]; then
-  DESTINATION="/tests/secured/$TEST_TYPE/$ROLE"
+  MODULE_FOLDER=$(echo "$SELECTED_MODULE" | tr '[:upper:]' '[:lower:]')
+  SUBMODULE_FOLDER=$(echo "$SELECTED_SUBMODULE" | tr '[:upper:]' '[:lower:]' | tr -d ' ' | tr ' ' '_')
   
-else
-  DESTINATION="/tests/unsecured/$TEST_TYPE"
-fi
+  DESTINATION="$BASE_DESTINATION/$MODULE_FOLDER"
+  if [ -n "$SUBMODULE_FOLDER" ]; then
+    DESTINATION="$DESTINATION/$SUBMODULE_FOLDER"
+  fi
 
-TIMESTAMP=$(date +"%Y%m%d%H%M%S")
-read -p "Enter a new name for the test file (no spaces allowed): " NEW_NAME
-if [[ -z "$NEW_NAME" || "$NEW_NAME" =~ \  ]]; then
-  echo "Error: Invalid file name. It cannot be empty or contain spaces."
-  exit 1
-fi
+  mkdir -p "$SCRIPT_DIR/$DESTINATION"
 
-NEW_FILENAME="${TIMESTAMP}_${NEW_NAME}.spec.ts"
+  TIMESTAMP=$(date +"%Y%m%d%H%M%S")
+  read -p "Enter a new name for the test file (no spaces allowed): " NEW_NAME
+  if [[ -z "$NEW_NAME" || "$NEW_NAME" =~ \  ]]; then
+    echo "Error: Invalid file name. It cannot be empty or contain spaces."
+    exit 1
+  fi
 
-NEW_FILENAME_AT_PATH="$SCRIPT_DIR/$NEW_FILENAME"
-touch $NEW_FILENAME_AT_PATH
+  NEW_FILENAME="${TIMESTAMP}_${NEW_NAME}.spec.ts"
+  NEW_FILENAME_AT_PATH="$SCRIPT_DIR/$NEW_FILENAME"
+  touch $NEW_FILENAME_AT_PATH
+  mv "$NEW_FILENAME_AT_PATH" "$SCRIPT_DIR/$DESTINATION/$NEW_FILENAME"
 
-mv "$NEW_FILENAME_AT_PATH" "$SCRIPT_DIR/$DESTINATION/$NEW_FILENAME"
+  echo "File moved to $DESTINATION/"
+  echo "Selected Module: $SELECTED_MODULE"
+  echo "Selected Submodule: $SELECTED_SUBMODULE"
+
+  TARGET_FILE="$SCRIPT_DIR/$DESTINATION/$NEW_FILENAME" 
 
 
-echo "File moved to $DESTINATION/"
+  if [[ "$AUTH_REQUIRED" == "yes" ]]; then
+    echo "Generating authenticated test..."
+    npx playwright codegen --browser=chromium --output="$SCRIPT_DIR/$DESTINATION/$NEW_FILENAME" "https://testing:NoMoreBugPlease01!@preprod.g8ts.online$ROUTE_PATH" --load-storage="$SCRIPT_DIR/$AUTH_FILE"
+  else 
+    echo "Generating unauthenticated test..."
+    npx playwright codegen --browser=chromium --output="$SCRIPT_DIR/$DESTINATION/$NEW_FILENAME" "https://testing:NoMoreBugPlease01!@preprod.g8ts.online/logout"
+  fi
 
-TARGET_FILE="$SCRIPT_DIR/$DESTINATION/$NEW_FILENAME" 
+  sed -i '' 's|https://preprod\.g8ts\.online/|https://testing:NoMoreBugPlease01\!@preprod.g8ts.online/|g' "$SCRIPT_DIR/$DESTINATION/$NEW_FILENAME"
+  sed -i '' "s/test('test',/test('test_$NEW_NAME',/" "$SCRIPT_DIR/$DESTINATION/$NEW_FILENAME"
 
-if [[ "$AUTH_REQUIRED" == "yes" ]]; then
-echo "sjsjjsjsjs"
-echo "$ROUTE_PATH"
+  if grep -q "getByRole('link', { name: 'Classes' })" "$TARGET_FILE"; then
+    if [[ "$SELECTED_MODULE" == "REGISTRY" ]]; then
+      echo "Updating Classes navigation for REGISTRY module"
+      perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Classes'\'' \}\)\.click\(\);|await page.hover('\''text=REGISTRY'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Classes'\'' }).click();|g' "$TARGET_FILE"
+    elif [[ "$SELECTED_MODULE" == "PLANNING" ]]; then
+      echo "Updating Classes navigation for PLANNING module"
+      perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Classes'\'' \}\)\.click\(\);|await page.hover('\''text=PLANNING'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Classes'\'' }).click();|g' "$TARGET_FILE"
+    fi
+  fi
 
-  npx playwright codegen  --browser=chromium --output=$SCRIPT_DIR/$DESTINATION/$NEW_FILENAME  "https://testing:NoMoreBugPlease01!@preprod.g8ts.online$ROUTE_PATH" --load-storage="$SCRIPT_DIR/$AUTH_FILE"
-else 
-echo "nbdnbdbd"
+  if [ -n "$SELECTED_MODULE" ] && [ -n "$SELECTED_SUBMODULE" ] && [[ "$SELECTED_SUBMODULE" != "Classes" ]]; then
+    echo "Updating navigation for $SELECTED_MODULE -> $SELECTED_SUBMODULE"
+    
+    case "$SELECTED_MODULE" in
+      "REGISTRY")
+        perl -i -pe "s|await page\.getByRole\('link', \{ name: '$SELECTED_SUBMODULE' \}\)\.click\(\);|await page.hover('text=REGISTRY'); await page.waitForTimeout(300); await page.getByRole('link', { name: '$SELECTED_SUBMODULE' }).click();|g" "$TARGET_FILE"
+        ;;
+      "PLANNING")
+        perl -i -pe "s|await page\.getByRole\('link', \{ name: '$SELECTED_SUBMODULE' \}\)\.click\(\);|await page.hover('text=PLANNING'); await page.waitForTimeout(30); await page.getByRole('link', { name: '$SELECTED_SUBMODULE' }).click();|g" "$TARGET_FILE"
+        ;;
+      "CRM")
+        perl -i -pe "s|await page\.getByRole\('link', \{ name: '$SELECTED_SUBMODULE' \}\)\.click\(\);|await page.hover('text=CRM'); await page.waitForTimeout(300); await page.getByRole('link', { name: '$SELECTED_SUBMODULE' }).click();|g" "$TARGET_FILE"
+        ;;
+      "MARKETING")
+        perl -i -pe "s|await page\.getByRole\('link', \{ name: '$SELECTED_SUBMODULE' \}\)\.click\(\);|await page.hover('text=MARKETING'); await page.waitForTimeout(300); await page.getByRole('link', { name: '$SELECTED_SUBMODULE' }).click();|g" "$TARGET_FILE"
+        ;;
+      "POS")
+        perl -i -pe "s|await page\.getByRole\('link', \{ name: '$SELECTED_SUBMODULE' \}\)\.click\(\);|await page.hover('text=POS'); await page.waitForTimeout(300); await page.getByRole('link', { name: '$SELECTED_SUBMODULE' }).click();|g" "$TARGET_FILE"
+        ;;
+      "TRANSACTIONS")
+        perl -i -pe "s|await page\.getByRole\('link', \{ name: '$SELECTED_SUBMODULE' \}\)\.click\(\);|await page.hover('text=TRANSACTIONS'); await page.waitForTimeout(300); await page.getByRole('link', { name: '$SELECTED_SUBMODULE' }).click();|g" "$TARGET_FILE"
+        ;;
+    esac
+  fi
 
-  npx playwright codegen --browser=chromium --output=$SCRIPT_DIR/$DESTINATION/$NEW_FILENAME  "https://testing:NoMoreBugPlease01!@preprod.g8ts.online/logout"
-  
-fi
+# get_category_id() {
+#     local file="$1"
 
-sed -i '' 's|https://preprod\.g8ts\.online/|https://testing:NoMoreBugPlease01\!@preprod.g8ts.online/|g' $SCRIPT_DIR/$DESTINATION/$NEW_FILENAME
-sed -i '' "s/test('test',/test('test_$NEW_NAME',/" $SCRIPT_DIR/$DESTINATION/$NEW_FILENAME
+#     if grep -q "await page\.getByRole('link', { name: 'Add New' })\.nth(1)\.click();" "$file" || \
+#          grep -q "await page\.locator('#service-pack-table" "$file"; then
+#         echo "service_pack_salesAttachment"
+#     fi
+# }
+
+# get_service_id() {
+#     local file="$1"
+
+#     if grep -q "await page\.getByRole('link', { name: 'Add New' })\.first()\.click();" "$file" || \
+#        grep -q "await page\.locator('.tabulator-cell').first().click();" "$file"; then
+#         echo "service_studio"
+
+#     elif grep -q "await page\.getByRole('link', { name: 'Add New' })\.nth(1)\.click();" "$file" || \
+#          grep -q "await page\.locator('#service-pack-table" "$file"; then
+#         echo "service_category_studio"
+#     fi
+# }
+
+perl -i -pe "s|(await page\.getByRole\('option', \{[^\}]+\}\))\.click\(\);|\$1.last().click();|g" "$TARGET_FILE"
+perl -i -pe "s|await page.getByRole\('option', { name: 'Credit: [0-9]+\. Price' }\)\.last\(\)\.click\(\);|await page.getByRole('option', { name: /Credit: .*\\. Price/ }).last().click();|g" "$TARGET_FILE"
+perl -i -pe "s/(page\.locator\('\.flex\.items-center\.text-theme-6\.delete-item\.tooltip'\))\.click\(\)/\$1.last().click()/g" "$TARGET_FILE"
+
+ replace_dynamic_id_locators "$TARGET_FILE"
 
 
   selector_array=(
+    "page.getByRole('textbox', { name: 'days' })"
     "page.getByRole('textbox', { name: 'Start' })"
     "page.getByRole('textbox', { name: 'Default Event Date' })"
      "page.getByRole('textbox', { name: 'Started' })"
@@ -227,23 +267,6 @@ sed -i '' "s/test('test',/test('test_$NEW_NAME',/" $SCRIPT_DIR/$DESTINATION/$NEW
     "page.getByRole('link', { name: 'News' })"
     "Firstname"
     "page.locator(\"a[onclick*='/user/profile']\")"
-    "page.getByRole('textbox', { name: 'cycling' })"
-    "page.getByRole('textbox', { name: 'classic' })"
-    "page.getByRole('textbox', { name: 'beatbox' })"
-    "page.getByRole('textbox', { name: 'male' })"
-    "page.getByRole('textbox', { name: 'mixed' })"
-    "page.getByRole('textbox', { name: 'female' })"
-    "page.getByRole('combobox', { name: 'male' })"
-    "page.getByRole('combobox', { name: 'mixed' })"
-    "page.getByRole('combobox', { name: 'female' })"
-    "page.getByRole('textbox', { name: 'Beginner' })"
-    "page.getByRole('textbox', { name: 'Advanced' })"
-    "page.getByRole('textbox', { name: 'Intermediate' })"
-    "page.getByRole('textbox', { name: 'All Levels' })"
-    "page.getByRole('textbox', { name: 'West Bay - Gate Mall' })"
-    "page.getByRole('textbox', { name: 'The Pearl Qatar' })"
-    "page.getByRole('textbox', { name: 'Test Class' }))"
-    "page.getByRole('textbox', { name: 'FITNESS CHALLENGE' })"
     "page.getByText('Select a status')"
     "page.getByRole('textbox', { name: 'Select an option' })"
     "page.getByRole('option', { name: 'Mohammed Naseef MM Pin: 58694' })"
@@ -251,27 +274,39 @@ sed -i '' "s/test('test',/test('test_$NEW_NAME',/" $SCRIPT_DIR/$DESTINATION/$NEW
     "page.getByRole('textbox', { name: 'Pincode' })"
     "page.getByText('' +  Pin: 58694')"
     "page.goto('https://testing:NoMoreBugPlease01%21@preprod.g8ts.online/admin/planning/event-occurrence');"
-    "page.getByRole('textbox', { name: 'Equipt Classes' })"
-    "page.getByRole('textbox', { name: 'Recovery' })"
-    "page.getByRole('textbox', { name: 'Open Gym' })"
-    "page.getByRole('textbox', { name: 'Equipt Fitness' })"
     "page.getByRole('link', { name: 'Export' })"
     "page.getByRole('link', { name: 'Trainer Profile' })"
     "page.getByRole('link', { name: 'Studio' })"
     "page.getByRole('link', { name: 'Packages' })"
     "page.getByRole('link', { name: 'Services' })"
-    "page.getByRole('textbox', { name: 'Personal Training"
-    "page.getByRole('textbox', { name: 'Events' })"
-    "page.getByRole('textbox', { name: 'Room Rental' })"
-    "page.getByRole('textbox', { name: 'Servicetestcat' })"
-    "page.getByRole('textbox', { name: 'category' })"
     "page.getByRole('link', { name: 'Customers' })"
-  "page.locator('#select2-class_booking_status-result-[^-]*-[1-4]')"
-  "page.getByRole('textbox', { name: 'Private Session' })"
-"page.getByRole('textbox', { name: 'Classes' })"
-"page.getByRole('combobox', { name: 'Private Session' })"
-"page.getByRole('combobox', { name: 'Classes' })"
-
+    "page.locator('#select2-class_booking_status-result-[^-]*-[1-4]')"
+    "page.getByRole('combobox', { name: 'opengym' })"
+    "page.getByRole('textbox', { name: 'Select a company to attach' })"
+    "select2-class_pack_category-container"
+    "select2-class_pack_salesAttachment-container"
+    "page.getByRole('textbox', { name: 'CREATED' })"
+    "page.getByRole('textbox', { name: 'ACCEPTED' })"
+    "page.getByRole('textbox', { name: 'DECLINED' })"
+    "page.getByRole('textbox', { name: 'CANCELLED' })"
+    "page.getByRole('textbox', { name: 'COMPLETED' })"
+    "page.getByRole('textbox', { name: 'EXPIRED' })"
+    "page.getByRole('textbox', { name: 'Choose and option' })"
+    "page.getByRole('textbox', { name: 'Select Payment' })"
+    "page.getByRole('textbox', { name: 'Pending Payment' })"
+    "page.getByRole('textbox', { name: 'Pay at the lab' })"
+    "page.getByRole('textbox', { name: 'Cash' })"
+    "page.getByRole('textbox', { name: 'Debit/Credit card (POS)' })"
+    "page.getByRole('textbox', { name: /Credit - total \([0-9]+ credits \)/ })"
+    "page.getByRole('textbox', { name: 'days' })"
+    "page.getByRole('textbox', { name: 'day' })"
+    "page.getByRole('textbox', { name: 'weeks' })"  
+    "page.getByRole('textbox', { name: 'month' })"
+    "page.getByRole('textbox', { name: 'months' })"
+    "page.getByRole('textbox', { name: 'week' })"
+    "page.locator('#select2-service_pack_services-result-"
+    "page.locator('#select2-membership_pack_classPacks-result-"
+    "page.locator('#event_occurrence_date')"
   )
 
   FILE="$SCRIPT_DIR/$DESTINATION/$NEW_FILENAME"
@@ -290,43 +325,84 @@ for i in 1 2 3 4; do
 done
 
 
+sed -i '' -E "s|getByRole\('row', *\{ *name: *'([0-9]+ )([^']+)' *\}\)|getByRole('row', { name: /\2/ })|g" "$FILE"
 
-for file in tests/secured/admin/superadmin/*.spec.ts; do
-  if grep -q "getByRole('link', { name: 'Classes' })" "$file"; then
-    if [[ "$file" == *registry* ]]; then
-      echo "Updating $file for REGISTRY"
-      perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Classes'\'' \}\)\.click\(\);|await page.hover('\''text=REGISTRY'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Classes'\'' }).click();|g' "$file"
 
-    elif [[ "$file" == *planning* ]]; then
-      echo "Updating $file for PLANNING"
-      perl -i -pe 's|await page\.getByRole\('\''link'\'', \{ name: '\''Classes'\'' \}\)\.click\(\);|await page.hover('\''text=PLANNING'\''); await page.waitForTimeout(300); await page.getByRole('\''link'\'', { name: '\''Classes'\'' }).click();|g' "$file"
-    fi
-  fi
-done
+if grep -q "page.locator.*getByRole('link', { name: 'Delete' })" "$TARGET_FILE" || \
+   grep -q "page.getByRole('link', { name: 'Delete' })" "$TARGET_FILE"; then
+  
+  sed -i '' -E "s|await page\.locator\('\[id=\"[0-9]+\"\]'\)\.getByRole\('link', \{ name: 'Delete' \}\)\.click\(\);|await page.getByRole('link', { name: 'Delete' }).first().click();|g" "$TARGET_FILE"
+  
+  sed -i '' -E "s|await page\.getByRole\('link', \{ name: 'Delete' \}\)(\.nth\([0-9]+\))?\.click\(\);|await page.getByRole('link', { name: 'Delete' }).first().click();|g" "$TARGET_FILE"
+  
+  echo "✓ Replaced Delete selectors with .first() pattern"
+fi
 
-  sed -i '' "s|await page.getByRole('option', { name: 'Credit: .*\. Price' }).click();|await page.getByRole('option', { name: /Credit: .*\\. Price/ }).click();|g" "$FILE"
-  sed -i '' -E "s|await page\.getByRole\('row', *\{ *name: *'[^']*' *\}\)\.getByRole\('button'\)\.click\(\);|await page.locator('.table-report tbody tr').first().locator('button').click();|g" "$FILE"
+if grep -q "page.locator.*getByRole('link', { name: 'Edit' })" "$TARGET_FILE" || \
+   grep -q "page.getByRole('link', { name: 'Edit' })" "$TARGET_FILE"; then
+  
+  sed -i '' -E "s|await page\.locator\('\[id=\"[0-9]+\"\]'\)\.getByRole\('link', \{ name: 'Edit' \}\)\.click\(\);|await page.getByRole('link', { name: 'Edit' }).first().click();|g" "$TARGET_FILE"
+  
+  sed -i '' -E "s|await page\.getByRole\('link', \{ name: 'Edit' \}\)(\.nth\([0-9]+\))?\.click\(\);|await page.getByRole('link', { name: 'Edit' }).first().click();|g" "$TARGET_FILE"
+  
+  echo "✓ Replaced Delete selectors with .first() pattern"
+fi
 
-  for selector in "${selector_array[@]}"; do
+if grep -qE "page\.locator\('\[id=\"[0-9]+\"\]" "$TARGET_FILE"; then
+  
+  sed -i '' -E "s|await page\.locator\('\[id=\"[0-9]+\"\] div'\)\.filter\(\{ hasText: '([^']+)' \}\)\.first\(\)\.click\(\);|await page.locator('div').filter({ hasText: '\1' }).first().click();|g" "$TARGET_FILE"
+  
+  sed -i '' -E "s|await page\.locator\(\"\[id=\\\"[0-9]+\\\"\] div\"\)\.filter\(\{ hasText: \"([^\"]+)\" \}\)\.first\(\)\.click\(\);|await page.locator('div').filter({ hasText: \"\1\" }).first().click();|g" "$TARGET_FILE"
+  
+  perl -i -pe "s|await page\.locator\('\[id=\"\d+\"\] div'\)\.filter\(\{ hasText: '([^']+)' \}\)\.first\(\)\.click\(\);|await page.locator('div').filter({ hasText: '\$1' }).first().click();|g" "$TARGET_FILE"
+  
+  echo "✓ Replaced dynamic ID selectors with .filter() pattern"
+fi
+
+  for selector in "${selector_array[@]}"; do 
     if grep -q "$selector" "$FILE"; then
-      if [[ "$selector" == *"page.getByRole('textbox', { name: 'Start' })"* ]]; then
-        grep "page.getByRole('textbox', { name: 'Start' }).fill" "$FILE" | \
-        sed -n "s/.*fill('\([^']*\)').*/\1/p" | while read -r value; do
-          date_filled=$(printf '%s' "$value" | sed -e 's/[\/&|]/\\&/g')
-          sed -i '' "s|page.getByRole('textbox', { name: 'Start' }).fill('$date_filled')|page.getByRole('textbox', { name: 'Start' }).fill(CustomgetFormattedDate())|g" "$FILE"
-        done
+
+
+      if [[ "$selector" == *"page.getByRole('textbox', { name: 'days' })"* || \
+            "$selector" == *"page.getByRole('textbox', { name: 'weeks' })"* || \
+            "$selector" == *"page.getByRole('textbox', { name: 'week' })"* || \
+            "$selector" == *"page.getByRole('textbox', { name: 'day' })"* || \
+            "$selector" == *"page.getByRole('textbox', { name: 'month' })"* || \
+            "$selector" == *"page.getByRole('textbox', { name: 'months' })"* ]]; then
+       for opt in days day weeks week months month; do
+  sed -i '' "s|await page.getByRole('textbox', { name: '$opt' }).click();|const displayedValue = await page.getByRole('textbox', { name: '$opt' }).evaluate(el => el.textContent?.trim());\nawait page.getByRole('textbox', { name: displayedValue }).click();|g" "$FILE"
+  done
+
+ elif [[ "$selector" == *"page.getByRole('textbox', { name: 'Start' })"* ]]; then
+
+  if grep -q "page.getByRole('textbox', { name: 'Start' }).fill" "$FILE"; then
+    sed -i '' "s|page.getByRole('textbox', { name: 'Start' }).fill([^)]*)|page.getByRole('textbox', { name: 'Start' }).fill(CustomgetFormattedDate())|g" "$FILE"
+  else
+    sed -i '' "s|page.getByRole('textbox', { name: 'Start' }).click();|page.getByRole('textbox', { name: 'Start' }).fill(CustomgetFormattedDate());|g" "$FILE"
+  fi
+
+  elif [[ "$selector" == *"page.locator('#event_occurrence_date')"* ]]; then
+  
+            grep "page.locator('#event_occurrence_date').fill" "$FILE" | \
+            sed -n "s/.*fill('\([^']*\)').*/\1/p" | while read -r value; do
+                date_filled=$(printf '%s' "$value" | sed -e 's/[\/&|]/\\&/g')
+                sed -i '' "s|page.locator('#event_occurrence_date').fill('$date_filled')|page.locator('#event_occurrence_date').fill(getCurrentDate())|g" "$FILE"
+            done
+
            elif [[ "$selector" == *"page.getByRole('textbox', { name: 'Started' })"* ]]; then
         grep "page.getByRole('textbox', { name: 'Started' }).fill" "$FILE" | \
         sed -n "s/.*fill('\([^']*\)').*/\1/p" | while read -r value; do
           date_filled=$(printf '%s' "$value" | sed -e 's/[\/&|]/\\&/g')
           sed -i '' "s|page.getByRole('textbox', { name: 'Started' }).fill('$date_filled')|page.getByRole('textbox', { name: 'Started' }).fill(getFormattedDateOnly())|g" "$FILE"
         done
+
            elif [[ "$selector" == *"page.getByRole('textbox', { name: 'Expiry' })"* ]]; then
         grep "page.getByRole('textbox', { name: 'Expiry' }).fill" "$FILE" | \
         sed -n "s/.*fill('\([^']*\)').*/\1/p" | while read -r value; do
           date_filled=$(printf '%s' "$value" | sed -e 's/[\/&|]/\\&/g')
           sed -i '' "s|page.getByRole('textbox', { name: 'Expiry' }).fill('$date_filled')|page.getByRole('textbox', { name: 'Expiry' }).fill(getFormattedDateOnly())|g" "$FILE"
         done
+        
          elif [[ "$selector" == *"page.getByRole('textbox', { name: 'Default Event Date' })"* ]]; then
         grep "page.getByRole('textbox', { name: 'Default Event Date' }).fill" "$FILE" | \
         sed -n "s/.*fill('\([^']*\)').*/\1/p" | while read -r value; do
@@ -334,94 +410,29 @@ done
           sed -i '' "s|page.getByRole('textbox', { name: 'Default Event Date' }).fill('$date_filled')|page.getByRole('textbox', { name: 'Default Event Date' }).fill(getFormattedDateOnly())|g" "$FILE"
         done
 
-      elif [[ "$selector" == *"page.getByRole('textbox', { name: 'End' })"* ]]; then
-        grep "page.getByRole('textbox', { name: 'End' }).fill" "$FILE" | \
-        sed -n "s/.*fill('\([^']*\)').*/\1/p" | while read -r value; do
-          date_filled=$(printf '%s' "$value" | sed -e 's/[\/&|]/\\&/g')
-          sed -i '' "s|page.getByRole('textbox', { name: 'End' }).fill('$date_filled')|page.getByRole('textbox', { name: 'End' }).fill(CustomgetFormattedDate(true))|g" "$FILE"
-        done
-     
+   elif [[ "$selector" == *"page.getByRole('textbox', { name: 'End' })"* ]]; then
+
+  if grep -q "page.getByRole('textbox', { name: 'End' }).fill" "$FILE"; then
+    sed -i '' "s|page.getByRole('textbox', { name: 'End' }).fill([^)]*)|page.getByRole('textbox', { name: 'End' }).fill(CustomgetFormattedDate(true))|g" "$FILE"
+  else
+    sed -i '' "s|page.getByRole('textbox', { name: 'End' }).click();|page.getByRole('textbox', { name: 'End' }).fill(CustomgetFormattedDate(true));|g" "$FILE"
+  fi
+
       elif [[ "$selector" == *"page.getByRole('textbox', { name: 'Pincode' })"* ]]; then
         grep "page.getByRole('textbox', { name: 'Pincode' }).fill" "$FILE" | sed -n "s/.*fill('\([^']*\)').*/\1/p" | while read -r value; do
           escaped=$(printf '%s' "$value" | sed -e 's/[\/&|]/\\&/g')
           sed -i '' "s|await page.getByRole('textbox', { name: 'Pincode' }).fill('$escaped')|await page.getByRole('textbox', { name: 'Pincode' }).type('$escaped', { delay: 100 })|g" "$FILE"
         done
-      elif [[ "$selector" == *"page.getByRole('textbox', { name: 'cycling' })"* || \
-            "$selector" == *"page.getByRole('textbox', { name: 'classic' })"* || \
-            "$selector" == *"page.getByRole('textbox', { name: 'beatbox' })"* ]]; then
-        sed -i '' "/await page.getByRole('option', { name: 'classic' }).click()/d" "$FILE"
-        sed -i '' "/await page.getByRole('option', { name: 'beatbox' }).click()/d" "$FILE"
-        sed -i '' "/await page.getByRole('option', { name: 'cycling' }).click()/d" "$FILE"
-        for opt in classic beatbox cycling; do
-          sed -i '' "s|await page.getByRole('textbox', { name: '$opt' }).click();|await page.locator('#event_class_type').selectOption({ index: faker.number.int({ min: 1, max: 2 }) });|g" "$FILE"
-        done
 
-      elif [[ "$selector" == *"page.getByRole('textbox', { name: 'male' })"* || \
-              "$selector" == *"page.getByRole('textbox', { name: 'female' })"* || \
-              "$selector" == *"page.getByRole('textbox', { name: 'mixed' })"* || \
-              "$selector" == *"page.getByRole('combobox', { name: 'male' })"* || \
-              "$selector" == *"page.getByRole('combobox', { name: 'female' })"* || \
-              "$selector" == *"page.getByRole('combobox', { name: 'mixed' })"* ]]; then
-        for opt in female male mixed; do  
-          sed -i '' "/await page.getByRole('option', { name: '$opt' }).click()/d" "$FILE"
-          sed -i '' "/await page.getByRole('option', { name: '$opt', exact: true }).click()/d" "$FILE"
-        done
-        for opt in female male mixed; do
-          sed -i '' "s|await page.getByRole('textbox', { name: '$opt' }).click();|await page.locator('#event_class_gender').selectOption({ index: faker.number.int({ min: 1, max: 2 }) });|g" "$FILE"
-          sed -i '' "s|await page.getByRole('combobox', { name: '$opt' }).click();|await page.locator('#event_class_gender').selectOption({ index: faker.number.int({ min: 1, max: 2 }) });|g" "$FILE"
-        done
-      elif [[ "$selector" == *"page.getByRole('textbox', { name: 'Beginner' })"* || \
-            "$selector" == *"page.getByRole('textbox', { name: 'Advanced' })"* || \
-            "$selector" == *"page.getByRole('textbox', { name: 'Intermediate' })"* || \
-            "$selector" == *"page.getByRole('textbox', { name: 'All Levels' })"* ]]; then
-        sed -i '' "/await page.getByRole('option', { name: 'Beginner' }).click()/d" "$FILE"
-        sed -i '' "/await page.getByRole('option', { name: 'Advanced' }).click()/d" "$FILE"
-        sed -i '' "/await page.getByRole('option', { name: 'Intermediate' }).click()/d" "$FILE"
-        sed -i '' "/await page.getByRole('option', { name: 'All Levels' }).click()/d" "$FILE"
-        for opt in "Beginner" "Advanced" "Intermediate" "All Levels"; do
-          sed -i '' "s|await page.getByRole('textbox', { name: '$opt' }).click();|await page.locator('#event_class_level').selectOption({ index: faker.number.int({ min: 1, max: 3 }) });|g" "$FILE"
-        done
-
-    
-    elif [[ "$selector" == *"page.getByRole('textbox', { name: 'Private Session' })"* || \
-        "$selector" == *"page.getByRole('textbox', { name: 'Classes' })"* || \
-        "$selector" == *"page.getByRole('combobox', { name: 'Private Session' })"* || \
-        "$selector" == *"page.getByRole('combobox', { name: 'Classes' })"* ]]; then
-
-    sed -i '' "/await page.getByRole('option', { name: 'Private Session' }).click()/d" "$FILE"
-    sed -i '' "/await page.getByRole('option', { name: 'Classes' }).click()/d" "$FILE"
-
-    for opt in "Private Session" "Classes"; do
-        sed -i '' "s|await page.getByRole('textbox', { name: '$opt' }).click();|await page.locator('#studio_category').selectOption({ index: faker.number.int({ min: 0, max: 1 }) });|g" "$FILE"
-        sed -i '' "s|await page.getByRole('combobox', { name: '$opt' }).click();|await page.locator('#studio_category').selectOption({ index: faker.number.int({ min: 0, max: 1 }) });|g" "$FILE"
-    done
-
-
-
-      elif [[ "$selector" == *"page.getByRole('link', { name: 'Subscriptions' })"* ]]; then
-        sed -i '' "s|await page.getByRole('link', { name: 'Subscriptions' }).click();|await page.hover('text=CRM'); await page.waitForTimeout(300); await page.getByRole('link', { name: 'Subscriptions' }).click();|g" "$FILE"
-      elif [[ "$selector" == *"page.getByRole('link', { name: 'Staff' })"* ]]; then
-        sed -i '' "s|await page.getByRole('link', { name: 'Staff' }).click();|await page.hover('text=CRM'); await page.waitForTimeout(300); await page.getByRole('link', { name: 'Staff' }).click();|g" "$FILE"
-     
-      elif [[ "$selector" == *"page.getByRole('link', { name: 'Roles' })"* ]]; then
-      echo "role"
-        sed -i '' "s|await page.getByRole('link', { name: 'Roles' }).click();|await page.hover('text=CRM'); await page.waitForTimeout(300); await page.getByRole('link', { name: 'Roles' }).click();|g" "$FILE"
-     
-      elif [[ "$selector" == *"page.getByRole('link', { name: 'Notifications' })"* ]]; then
-        sed -i '' "s|await page.getByRole('link', { name: 'Notifications' }).click();|await page.hover('text=MARKETING'); await page.waitForTimeout(300); await page.getByRole('link', { name: 'Notifications' }).click();|g" "$FILE"
-      elif [[ "$selector" == *"page.getByRole('link', { name: 'Popin Home' })"* ]]; then
-        sed -i '' "s|await page.getByRole('link', { name: 'Popin Home' }).click();|await page.hover('text=MARKETING'); await page.waitForTimeout(300); await page.getByRole('link', { name: 'Popin Home' }).click();|g" "$FILE"
-      elif [[ "$selector" == *"page.getByRole('link', { name: 'News' })"* ]]; then
-        sed -i '' "s|await page.getByRole('link', { name: 'News' }).click();|await page.hover('text=MARKETING'); await page.waitForTimeout(300); await page.getByRole('link', { name: 'News' }).click();|g" "$FILE"
-  
       elif [[ "$selector" == *"getByLabel('Start')"* ]]; then
         sed -i '' "s|page.getByLabel('Start').click()|page.getByLabel('Start').fill(getFormattedDate())|g" "$FILE"
       elif [[ "$selector" == *"getByLabel('Date/Time')"* || "$selector" == *"page.getByRole('textbox', { name: 'Date/Time' })"* ]]; then
         grep "page.getByRole('textbox', { name: 'Date/Time' }).fill" "$FILE" | \
         sed -n "s/.*fill('\([^']*\)').*/\1/p" | while read -r value; do
           date_filled=$(printf '%s' "$value" | sed -e 's/[\/&|]/\\&/g')
-          sed -i '' "s|page.getByRole('textbox', { name: 'Date/Time' }).fill('$date_filled')|page.getByRole('textbox', { name: 'Date/Time' }).fill(CustomgetFormattedDate())|g" "$FILE"
+          sed -i '' "s|page.getByRole('textbox', { name: 'Date/Time' }).fill('$date_filled')|page.getByRole('textbox', { name: 'Date/Time' }).fill(getFormattedDate())|g" "$FILE"
         done
+
       elif [[ "$selector" == *"page.getByRole('textbox', { name: 'Event Start' })"* || \
             "$selector" == *"page.getByRole('textbox', { name: 'Event End' })"* || \
             "$selector" == *"page.getByRole('textbox', { name: 'Publish Start' })"* || \
@@ -433,6 +444,7 @@ done
             sed -i '' "s|page.getByRole('textbox', { name: '$field' }).fill('$safe_value')|page.getByRole('textbox', { name: '$field' }).fill(getFormattedDateOnly())|g" "$FILE"
           done
         done
+
       elif [[ "$selector" == *"page.locator('#start')"* ]]; then
         sed -i '' "s|page.locator('#start').click()|page.locator('#start').fill(getFormattedDate({daysOffset:-90}))|g" "$FILE"
         sed -i '' "s|page.locator('#end').click()|page.locator('#end').fill(getFormattedDate({daysOffset:1}))|g" "$FILE"
@@ -442,83 +454,35 @@ done
         sed -i '' "s|page.locator('a:nth-child(6)')|page.locator('a:has(svg path[d^=\"M28.866\"])')|g" "$FILE"
       fi
     fi
+
   done
 
-DURATION_ID=$(detect_duration_dropdown_id "$FILE")
 
-for i in $(seq 0 5 240); do
-  sed -i '' "/await page.getByRole('option', { name: '$i', exact: true }).click()/d" "$FILE"
-  sed -i '' "/await page.getByRole('option', { name: '$i' }).click()/d" "$FILE"
-  sed -i '' "s|await page.getByRole('textbox', { name: 'Select Duration' }).click();|await page.locator('$DURATION_ID').selectOption({ index: faker.number.int({ min: 1, max: 10 }) });|g" "$FILE"
-  sed -i '' "s|await page.getByRole('textbox', { name: '$i', exact: true }).click();|await page.locator('$DURATION_ID').selectOption({ index: faker.number.int({ min: 1, max: 10 }) });|g" "$FILE"
-  sed -i '' "s|await page.getByRole('textbox', { name: '$i' }).click();|await page.locator('$DURATION_ID').selectOption({ index: faker.number.int({ min: 1, max: 10 }) });|g" "$FILE"
-  sed -i '' "s|await page.getByRole('textbox', { name: '$i',  }).click();|await page.locator('$DURATION_ID').selectOption({ index: faker.number.int({ min: 1, max: 10 }) });|g" "$FILE"
-done
-
-
-# perl -0777 -i -pe "
-# s|await page\.getByRole\('link', \{ name: 'REGISTRY' \}\)\.click\(\);\s*await page\.getByRole\('link', \{ name: 'Classes' \}\)\.click\(\);|await page.hover('text=REGISTRY'); await page.waitForTimeout(300); await page.getByRole('link', { name: 'Classes' }).click();|g
-# " "$FILE"
-# if grep -q "page.getByRole('link', { name: 'PLANNING' }).click()" "$FILE"; then
-#     sed -i '' "s|await page.getByRole('link', { name: 'Classes' }).click();|await page.hover('text=PLANNING'); await page.waitForTimeout(300); await page.getByRole('link', { name: 'Classes' }).click();|g" "$FILE"
-# fi
-
-sed -i '' -E "s|await page\.getByRole\('row', *\{ *name: *'[^']*' *\}\)\.getByRole\('link'\)\.nth\(4\)\.click\(\);|await page.getByRole('row', { name: '' }).getByRole('link').last().click();|g" "$FILE"
-  sed -i '' "s|await page.locator('#classes div').filter({ hasText: .* }).nth(1).click();|await page.locator('.toggle_details').first().click();|g" "$FILE"
-  sed -i '' "s|await page.locator('#select2-event_class_classPacks-result-[^']*').click();|await page.locator('#event_class_classPacks').selectOption({ index: faker.number.int({ min: 1, max: 10 }) });|g" "$FILE"
-  
-  replace_table_selectors "$TARGET_FILE"
-
-    # if grep -q "page.getByRole('link', { name: 'Delete' })" "$TARGET_FILE"; then
-    #   sed -i '' -E "s|await page\.getByRole\('link', \{ name: 'Delete' \}\)(\.nth\([0-9]+\))?\.click\(\);|await deleteRow(page);|g" "$TARGET_FILE"
-    #   echo "import { deleteRow } from './../../../../$SCRIPT_DIR/helper.ts';" | cat - "$TARGET_FILE" > temp && mv temp "$TARGET_FILE"
-    #   USE_DELETE_HELPER=true
-    # fi
-
-if grep -q "page.goto('https://preprod.g8ts.online/admin/registry/class-pack/form')" "$TARGET_FILE" || 
-   grep -q "page.goto('https://testing:NoMoreBugPlease01%21@preprod.g8ts.online/admin/registry/class-pack/form')" "$TARGET_FILE"; then
-  echo "Detected class-pack form navigation"
-  
- 
-fi
-
-#   if grep -qE "await page\.locator\('div:nth-child\([0-9]+\) > div'\)\.first\(\)\.click\(\);" "$TARGET_FILE"; then
-#   sed -i '' -i -E "s|await page\.locator\('div:nth-child\([0-9]+\) > div'\)\.first\(\)\.click\(\);|await checkRow(page, 'membership-pack-table');|g" "$TARGET_FILE"
-#   echo "import { checkRow } from './../../../../$SCRIPT_DIR/helper.ts';" | cat - "$TARGET_FILE" > temp && mv temp "$TARGET_FILE"
-#   USE_CLICK_ROW_HELPER=true
-# fi
-
-# Match and replace first pattern: div:nth-child(...) > div
-if grep -qE "await page\.locator\('#[^']+ > \.tabulator-tableHolder > \.tabulator-table > div:nth-child\([0-9]+\) > div'\)\.first\(\)\.click\(\);" "$TARGET_FILE"; then
-  sed -i '' -E "s|await page\.locator\('#([-a-zA-Z0-9]+) > \.tabulator-tableHolder > \.tabulator-table > div:nth-child\([0-9]+\) > div'\)\.first\(\)\.click\(\);|await checkRow(page, '\1');|g" "$TARGET_FILE"
-fi
-
-# Match and replace second pattern: .tabulator-row .tabulator-cell
-if grep -qE "await page\.locator\('#[^']+ \.tabulator-row'\)\.first\(\)\.locator\('\.tabulator-cell'\)\.first\(\)\.click\(\);" "$TARGET_FILE"; then
-  sed -i '' -E "s|await page\.locator\('#([-a-zA-Z0-9]+) \.tabulator-row'\)\.first\(\)\.locator\('\.tabulator-cell'\)\.first\(\)\.click\(\);|await checkRow(page, '\1');|g" "$TARGET_FILE"
-fi
-
-# Add import once at the top, if not already present
-# if ! grep -q "checkRow" "$TARGET_FILE"; then
-  
-  { echo "import { checkRow } from './../../../../$SCRIPT_DIR/helper.ts';"; cat "$TARGET_FILE"; } > temp && mv temp "$TARGET_FILE"
-# fi
-
-
-  echo "import { faker } from '@faker-js/faker';" | cat - "$TARGET_FILE" > temp && mv temp "$TARGET_FILE"
+sed -i '' -E "s|await page\.locator\('tr:nth-child\([^)]+\) > td:nth-child\([^)]+\) > \.font-medium > div > \.flex\.items-center\.text-theme-6'\)\.click\(\);|await page.locator('.delete-item').last().click();|g" "$FILE"
+sed -i '' -E "s|await page\.locator\('tr:nth-child\([^)]+\) > td:nth-child\([^)]+\) > \.font-medium > div > \.flex\.items-center\.text-theme-6'\)\.click\(\);|await page.locator('.delete-item').last().click();|g" "$FILE"
+sed -i '' -E "s|await page\.getByRole\('row', *\{ *name: *'[^']*' *\}\)\.getByRole\('link'\)\.nth\(([0-9]+)\)\.click\(\);|await page.getByRole('row', { name: '' }).getByRole('link').nth(3).first().click();|g" "$FILE"                                                                                                   
+sed -i '' "s|await page.locator('#classes div').filter({ hasText: .* }).nth(1).click();|await page.locator('.toggle_details').first().click();|g" "$FILE"
 
   if [[ "$AUTH_REQUIRED" == "yes" ]]; then
-    echo "import { getFormattedDate,getFormattedDateOnly,CustomgetFormattedDate } from './../../../../$SCRIPT_DIR/utils.js';" | cat - "$TARGET_FILE" > temp && mv temp "$TARGET_FILE"
+    echo "import { getFormattedDate,getFormattedDateOnly,CustomgetFormattedDate,getCurrentDate } from './../../../../../../$SCRIPT_DIR/utils.js';" | cat - "$TARGET_FILE" > temp && mv temp "$TARGET_FILE"
   else
     echo "const fixtures_data = JSON.parse(JSON.stringify(require('./../../../$SCRIPT_DIR/testing-data.json')));" | cat - "$TARGET_FILE" > temp && mv temp "$TARGET_FILE"
   fi
 
-  # if [ "$USE_DELETE_HELPER" = true ]; then
-  #   echo "import { deleteRow } from '../helper.ts';"
-  # fi
-   if [ "$USE_CLICK_ROW_HELPER" = true ]; then
-    echo "import { checkRow } from '../helper.ts';"
+  if [ "$USE_DELETE_HELPER" = true ]; then
+    echo "import { deleteRow } from '../helper.ts';"
   fi
+
+
+  if [[ "$AUTH_REQUIRED" == "yes" ]]; then
+    RELATIVE_PATH="../../../../"
+  else
+    RELATIVE_PATH="../../../"
+  fi
+
+
+  sed -i '' "s|from './../../../../|from '${RELATIVE_PATH}|g" "$TARGET_FILE"
+  sed -i '' "s|from './../../../|from '${RELATIVE_PATH}|g" "$TARGET_FILE"
 
   read -p "Do you want to run the script again? (yes | no): " RUN_AGAIN
   if [[ "$RUN_AGAIN" == "no" ]]; then
@@ -529,3 +493,4 @@ done
 
 printf "%s " "Press enter to quit"
 read ans
+

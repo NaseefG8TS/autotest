@@ -1,3 +1,5 @@
+import { getDefaultAutoSelectFamily } from 'net';
+
 const fs = require('fs');
 
 export function getFormattedDate({ hoursOffset = 0, daysOffset = 0, monthsOffset = 0 } = {}) {
@@ -27,13 +29,11 @@ export function getFormattedDateWithOffset(offset) {
 }
 
 
-
 export function getFormattedDateOnly() {
   const date = new Date();
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
-
   return `${year}-${month}-${day}`;
 }
   
@@ -73,3 +73,42 @@ export function CustomgetFormattedDate(end =false,{ hoursOffset = 0, daysOffset 
  return `${year}-${month}-${day}T${hours}:${minutes}`;
 
 }
+
+
+
+// export function getDays() {
+//   const days = [];
+//   const today = new Date();
+
+//   for (let i = 1; i <= 15; i++) {
+//     const futureDate = new Date(today);
+//     futureDate.setDate(today.getDate() + i);
+
+//     const dayName = futureDate.toLocaleDateString('en-US', { weekday: 'long' });
+//     const day = futureDate.getDate();
+//     const month = futureDate.toLocaleDateString('en-US', { month: 'short' });
+
+//     const formattedDate = `${dayName}, ${day} ${month}`;
+//     days.push(formattedDate);
+//   }
+
+//   return days;
+// }
+
+
+export function getCurrentDate(daysOffset = 0) {
+  const date = new Date();
+  
+  if (daysOffset !== 0) {
+    date.setDate(date.getDate() + daysOffset);
+  }
+  
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  
+  return `${year}-${month}-${day}`;
+}
+
+
+
