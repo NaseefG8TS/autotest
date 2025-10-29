@@ -4,15 +4,13 @@
 -  Replace fragile selectors with robust alternatives
 -  Auto-convert dates using  helper function modified with custom reusbale date
 -  Realistic hover interactions before clicks
--  context detection on prompted name (PLANNING vs REGISTRY flows)
--  Automatic failure screenshots
 -  timeout handling before Save/Submit clicks (PIN check)
 
 ## 🚀 Quick Start
 
 ### 1. Initial Setup
 
-```bash (terminal)
+
 
 # Install dependencies
 npm install -g @playwright/test @faker-js/faker
@@ -58,14 +56,11 @@ npx playwright test --slowmo=1000
 
 # HTML report
 npx playwright show-report
-#kill port 
+#kill port
 lsof -i :9323
-kill -9 35732
-
-
+kill -9 "port number"
 
 
 # first we test registry
-
 
 

@@ -207,27 +207,8 @@ while true; do
     esac
   fi
 
-# get_category_id() {
-#     local file="$1"
 
-#     if grep -q "await page\.getByRole('link', { name: 'Add New' })\.nth(1)\.click();" "$file" || \
-#          grep -q "await page\.locator('#service-pack-table" "$file"; then
-#         echo "service_pack_salesAttachment"
-#     fi
-# }
 
-# get_service_id() {
-#     local file="$1"
-
-#     if grep -q "await page\.getByRole('link', { name: 'Add New' })\.first()\.click();" "$file" || \
-#        grep -q "await page\.locator('.tabulator-cell').first().click();" "$file"; then
-#         echo "service_studio"
-
-#     elif grep -q "await page\.getByRole('link', { name: 'Add New' })\.nth(1)\.click();" "$file" || \
-#          grep -q "await page\.locator('#service-pack-table" "$file"; then
-#         echo "service_category_studio"
-#     fi
-# }
 
 perl -i -pe "s|(await page\.getByRole\('option', \{[^\}]+\}\))\.click\(\);|\$1.last().click();|g" "$TARGET_FILE"
 perl -i -pe "s|await page.getByRole\('option', { name: 'Credit: [0-9]+\. Price' }\)\.last\(\)\.click\(\);|await page.getByRole('option', { name: /Credit: .*\\. Price/ }).last().click();|g" "$TARGET_FILE"
